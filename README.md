@@ -72,6 +72,7 @@ The Backend is a Node.js application powered by Express and PostgreSQL. It provi
   npm install
 ```
 3. Configure the environment:
+```bash
 DATABASE_HOST is for current database host
 DATABASE_PORT is for running postgre sql running port
 DATABASE_USER is for database user
@@ -81,6 +82,7 @@ DATABASE_ADMIN_USER is for datbase admin user name for creating database
 DATABASE_ADMIN_PASSWORD is for datbase admin user password for creating database
 DATABASE_ADMIN_NAME is for master database for creating database
 PORT is current running frond end port
+```
 4. Seed database
 ```bash
   npm run seed
