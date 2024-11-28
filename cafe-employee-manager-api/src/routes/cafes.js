@@ -12,8 +12,8 @@ router.get('/', async (req, res) => {
   const { location } = req.query;
   try {
     const query = location
-      ? 'SELECT c.*, (SELECT COUNT(*) FROM public."Employee" e WHERE e.cafe_id = c.id) AS employee_count FROM public."Cafe" c WHERE location = $1 ORDER BY employee_count DESC;'
-      : 'SELECT c.*, (SELECT COUNT(*) FROM public."Employee" e WHERE e.cafe_id = c.id) AS employee_count FROM public."Cafe" c ORDER BY employee_count DESC;';
+      ? 'SELECT c.*, (SELECT COUNT(*) FROM public."employees" e WHERE e.cafe_id = c.id) AS employee_count FROM public."cafes" c WHERE location = $1 ORDER BY employee_count DESC;'
+      : 'SELECT c.*, (SELECT COUNT(*) FROM public."employees" e WHERE e.cafe_id = c.id) AS employee_count FROM public."cafes" c ORDER BY employee_count DESC;';
 
     const { rows } = await pool.query(query, location ? [location] : []);
     res.json(rows.map(row => ({
@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
       logo: bufferToBase64(row.logo),
     })));
   } catch (error) {
-    console.error('Error fetching Cafe:', error);
+    console.error('Error fetching cafes:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
 
   try {
     await pool.query(
-      'INSERT INTO public."Cafe" (id, name, description, location, logo) VALUES ($1, $2, $3, $4, $5)',
+      'INSERT INTO public."cafes" (id, name, description, location, logo) VALUES ($1, $2, $3, $4, $5)',
       [id, name, description, location, logoBuffer]
     );
     res.status(201).json({ id, name, description, location, logo, employee_count: 0 });
@@ -53,12 +53,12 @@ router.put('/:id', async (req, res) => {
   try {
     if (isUploaded) {
       await pool.query(
-        'UPDATE public."Cafe" SET name = $1, description = $2, location = $3, logo = $4 WHERE id = $5',
+        'UPDATE public."cafes" SET name = $1, description = $2, location = $3, logo = $4 WHERE id = $5',
         [name, description, location, logoBuffer || null, id]
       );
     } else {
       await pool.query(
-        'UPDATE public."Cafe" SET name = $1, description = $2, location = $3 WHERE id = $4',
+        'UPDATE public."cafes" SET name = $1, description = $2, location = $3 WHERE id = $4',
         [name, description, location, id]
       );
     }
@@ -73,8 +73,8 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    await pool.query('DELETE FROM public."Cafe" WHERE id = $1', [id]);
-    res.json({ message: 'Cafe deleted successfully' });
+    await pool.query('DELETE FROM public."cafes" WHERE id = $1', [id]);
+    res.json({ message: 'cafes deleted successfully' });
   } catch (error) {
     console.error('Error deleting cafe:', error);
     res.status(500).json({ error: 'Internal Server Error' });

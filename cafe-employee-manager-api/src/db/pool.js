@@ -2,11 +2,11 @@ const { Pool } = require('pg');
 
 // Database connection configuration
 const pool = new Pool({
-  user: 'user',
-  host: 'localhost',
-  database: 'EmployeeCafe',
-  password: 'user',
-  port: 5432, // Default PostgreSQL port
+  user: process.env.DATABASE_USER,
+  host: process.env.DATABASE_HOST,
+  database: process.env.DATABASE_NAME,
+  password: process.env.DATABASE_PASSWORD,
+  port: process.env.DATABASE_PORT
 });
 
 pool.on('connect', () => {
